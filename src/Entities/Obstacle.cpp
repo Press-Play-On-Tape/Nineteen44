@@ -33,7 +33,7 @@ Rect Obstacle::getRect() {
   #ifdef OLD_OBSTACLES
   return (Rect){ _x.getInteger() + 1, _y.getInteger() + 1, static_cast<uint8_t>(pgm_read_byte(&_bitmap[0]) - 2), static_cast<uint8_t>(pgm_read_byte(&_bitmap[1]) - 2) };
   #else
-  return (Rect){ _x.getInteger() + 1, _y.getInteger() + 1, 10, 12 };
+  return (Rect){ _x.getInteger() + 1, _y.getInteger() + 1, 12, 10 };
   #endif
 
 }

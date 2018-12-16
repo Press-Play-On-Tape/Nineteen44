@@ -132,7 +132,6 @@ void renderHighScore(HighScore &highScore) {
   else {
 
     uint8_t pressed = arduboy.pressedButtons();
-    //sjh Sprites::drawOverwrite(23, 48/*38*/, splash_press_a, 0);    
 
 
     // Clear scores ..

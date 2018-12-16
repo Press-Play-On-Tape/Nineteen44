@@ -125,7 +125,7 @@ void setup() {
   arduboy.boot();
   arduboy.flashlight(); 
   arduboy.systemButtons();
-  //arduboy.audio.begin();//SJH
+  arduboy.audio.begin();
   
   obstacleLaunchDelayMin = OBSTACLE_LAUNCH_DELAY_MIN;
   obstacleLaunchDelayMax = OBSTACLE_LAUNCH_DELAY_MAX;
@@ -233,16 +233,6 @@ void gameLoop() {
       lowerSceneryPosition.enabled = false;
 
     case 2 ... 79:
-
-      // Sprites::drawOverwrite(60, 2 + offsetY, mission_number, 0);
-      // if (mission >= 99) Sprites::drawOverwrite(60, offsetNumber, numbers_vert, (mission + 1) / 100);
-      // if (mission >= 9)  Sprites::drawOverwrite(60, offsetNumber + 6, numbers_vert, ((mission + 1) / 10) % 10);
-      // Sprites::drawOverwrite(60, offsetNumber + 12, numbers_vert, (mission + 1) % 10);
-
-      // arduboy.drawVerticalDottedLine(offsetY, HEIGHT - offsetY, 57);
-      // arduboy.drawVerticalDottedLine(offsetY, HEIGHT - offsetY, 69);
-
-
       {
         uint8_t x = 26;
         Sprites::drawOverwrite(x + 3, 30, mission_number, 0);
@@ -258,7 +248,6 @@ void gameLoop() {
         arduboy.drawHorizontalDottedLine(x, x + 68, 41);
 
       }
-
 
       intro--;
       break;

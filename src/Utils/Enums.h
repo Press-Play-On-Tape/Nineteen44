@@ -32,10 +32,8 @@
 //    _OLD_OBSTACLES
 //    USE_LEDS
 //
-#define _ORIENTATION_VERT
-#define ORIENTATION_HORIZ
 #define SAVE_MEMORY
-#define OLD_OBSTACLES
+#define _OLD_OBSTACLES
 #define USE_LEDS
 #define USE_ISLAND_3
 #define USE_ROLL_MOVEMENT
@@ -107,7 +105,7 @@ enum class GameState : uint8_t {
 
 #define POWER_UP_MAX                    10
 
-#define FUEL_MAX                        14 //14  SJH
+#define FUEL_MAX                        14
 #define FUEL_MIN                        FUEL_MAX / 2
 #define FUEL_DECREMENT                  0.010
 #define FUEL_DECREMENT_BOOST            0.005

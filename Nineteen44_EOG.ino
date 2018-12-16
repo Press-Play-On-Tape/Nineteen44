@@ -1,7 +1,5 @@
 #include "src/Utils/Arduboy2Ext.h"
 
-#ifdef ORIENTATION_HORIZ
-
 
 /* -----------------------------------------------------------------------------------------------------------------------------
  *  End of mission / game loop ..
@@ -124,5 +122,3 @@ void endOfSequence(const uint8_t level) {
   }
 
 }
-
-#endif

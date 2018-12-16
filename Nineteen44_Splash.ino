@@ -32,59 +32,28 @@ void introInit() {
  */
 void credits_loop() {
 
-  #ifdef ORIENTATION_VERT
+  Sprites::drawOverwrite(11, 10, credits_01, 0);
+  for (uint8_t x = 0; x < 64; x = x + 13) {
+    Sprites::drawOverwrite(x + 8, 22, credits_02, 0);
+  }
+  Sprites::drawOverwrite(0, 48, splash_lower, 0);
 
-    Sprites::drawOverwrite(113, 6, credits_01, 0);
-    Sprites::drawOverwrite(104, 4, credits_02, 0);
+  arduboy.drawHorizontalDottedLine(4, 69, 3);
+  arduboy.drawHorizontalDottedLine(4, 69, 32);
 
-    arduboy.drawVerticalDottedLine(0, HEIGHT, 97);
-    arduboy.drawVerticalDottedLine(0, HEIGHT, 127);
+  Sprites::drawOverwrite(75, 3, filmote_01, 0);
+  Sprites::drawOverwrite(91, 6, filmote_02, 0);
+  Sprites::drawOverwrite(75, 17, pharap_01, 0);
+  Sprites::drawOverwrite(91, 23, pharap_02, 0);
+  Sprites::drawOverwrite(75, 35, vampirics_01, 0);
+  Sprites::drawOverwrite(91, 40, vampirics_02, 0);
+  Sprites::drawOverwrite(23, 38, splash_press_a, 0);
 
-    if (intro < 120) {
+  if (intro < 210) {
 
-      drawFlyingPair();
-    
-    }
-    else {  
-
-      Sprites::drawOverwrite(70, 9, filmote_01, 0);
-      Sprites::drawOverwrite(70, 26, filmote_02, 0);
-      Sprites::drawOverwrite(52, 9, pharap_01, 0);
-      Sprites::drawOverwrite(53, 26, pharap_02, 0);
-      Sprites::drawOverwrite(36, 8, vampirics_01, 0);
-      Sprites::drawOverwrite(37, 26, vampirics_02, 0);
-      Sprites::drawOverwrite(0, 15, splash_press_a, 0);
-
-    }
-
-  #endif
-
-  #ifdef ORIENTATION_HORIZ
-
-    Sprites::drawOverwrite(11, 10, credits_01, 0);
-    for (uint8_t x = 0; x < 64; x = x + 13) {
-      Sprites::drawOverwrite(x + 8, 22, credits_02, 0);
-    }
-    Sprites::drawOverwrite(0, 48, splash_lower, 0);
-
-    arduboy.drawHorizontalDottedLine(4, 69, 3);
-    arduboy.drawHorizontalDottedLine(4, 69, 32);
-
-    Sprites::drawOverwrite(75, 3, filmote_01, 0);
-    Sprites::drawOverwrite(91, 6, filmote_02, 0);
-    Sprites::drawOverwrite(75, 17, pharap_01, 0);
-    Sprites::drawOverwrite(91, 23, pharap_02, 0);
-    Sprites::drawOverwrite(75, 35, vampirics_01, 0);
-    Sprites::drawOverwrite(91, 40, vampirics_02, 0);
-    Sprites::drawOverwrite(23, 38, splash_press_a, 0);
-
-    if (intro < 210) {
-
-      drawFlyingPair();
-    
-    }
-    
-  #endif
+    drawFlyingPair();
+  
+  }
 
   if (arduboy.justPressed(A_BUTTON)) {
     #ifndef HIGH_SCORES
@@ -129,22 +98,10 @@ enum class ArrowState : uint8_t {
 
 void introLoop() {
 
-  #ifdef ORIENTATION_VERT 
-
-    Sprites::drawOverwrite(73, 1, title, 0);
-    Sprites::drawOverwrite(59, 4, battle_of_midway_1, 0);
-    Sprites::drawOverwrite(49, 4, battle_of_midway_2, 0);
-    Sprites::drawOverwrite(112, 0, splash_upper, 0);
-    Sprites::drawOverwrite(0, 0, splash_lower, 0);
-
-  #endif
-
-  #ifdef ORIENTATION_HORIZ
-    Sprites::drawOverwrite(5, 19, title, 0);
-    Sprites::drawOverwrite(71, 19, return_to_midway, 0);
-    Sprites::drawOverwrite(0, 0, splash_upper, 0);
-    Sprites::drawOverwrite(0, 48, splash_lower, 0);
-  #endif
+  Sprites::drawOverwrite(5, 19, title, 0);
+  Sprites::drawOverwrite(71, 19, return_to_midway, 0);
+  Sprites::drawOverwrite(0, -2, splash_upper, 0);
+  Sprites::drawOverwrite(0, 50, splash_lower, 0);
 
   {
     IntroState state = static_cast<IntroState>((introState & 0b11100000) >> 5);
@@ -154,19 +111,7 @@ void introLoop() {
     switch (state) {
 
       case IntroState::PressA:
-
-        #ifdef ORIENTATION_VERT
-
-          Sprites::drawOverwrite(SPLASH_PRESS_A_X, SPLASH_PRESS_A_Y, splash_press_a, 0);
-
-        #endif
-
-        #ifdef ORIENTATION_HORIZ
-
-          Sprites::drawOverwrite(83, 38, splash_press_a, 0);
-
-        #endif
-
+        Sprites::drawOverwrite(83, 38, splash_press_a, 0);
         break;
 
       case IntroState::Level1 ... IntroState::Level3:

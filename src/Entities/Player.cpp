@@ -31,7 +31,7 @@ void Player::setY(const SQ15x16 value) {
 
 void Player::initGame() {
             
-  _score = 3; //0 SJH
+  _score = 0;
   initMission();
   
 }
