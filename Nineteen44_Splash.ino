@@ -245,16 +245,26 @@ void gameInit() {
   for (uint8_t i = 0; i < NUMBER_OF_ENEMIES; ++i) {
     enemies[i].setEnabled(false);
   }  
+
   for (uint8_t i = 0; i < PLAYER_BULLETS_MAX; ++i) {
     playerBullets[i].setEnabled(false);
   }
+
   for (uint8_t i = 0; i < ENEMY_BULLETS_MAX; ++i) {
     enemyBullets[i].setEnabled(false);
   }
   
-  initSceneryItems();
-  player.initMission();
-  obstacle.setEnabled(false);
+  {
+    bool initConsumables = false;
+
+    if (level < 2)                   { initConsumables = true; } 
+    if (level == 2 && mission == 60) { initConsumables = true; }
+
+    initSceneryItems();
+    player.initMission(initConsumables);
+    obstacle.setEnabled(false);
+
+  }
 
   sound.tones(mission_start);
   intro = 80;

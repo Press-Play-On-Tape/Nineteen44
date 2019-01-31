@@ -218,6 +218,9 @@ enum class GameState : uint8_t {
 #define SCENERY_UPPER_OFFSET_MAX_MINUS_INC 20       
 #define SCENERY_UPPER_OFFSET_MAX SCENERY_UPPER_OFFSET_MAX_MINUS_INC + 4
 
+#define INIT_FUEL_MIN                   4
+#define INIT_HEALTH_MIN                 4
+#define INIT_BULLETS_MIN                10
 
 constexpr uint8_t DO_NOT_EDIT_SLOT             = 255;
 constexpr uint8_t MAX_NUMBER_OF_SCORES         = 5;

@@ -14,7 +14,7 @@ class Player : public Plane {
 
     void renderImage(uint8_t frame);
     void initGame();
-    void initMission();
+    void initMission(bool initConsumables);
 
     SQ7x8 getFuel();
     uint8_t getBullets();
