@@ -10,12 +10,10 @@
 // 
 //  To use the original graphics:
 //    SAVE_MEMORY 
-//    OLD_OBSTACLES
 //    _USE_LEDS
 //
 //  To use new obstacle graphics and dashboard:
 //    SAVE_MEMORY 
-//    _OLD_OBSTACLES
 //    USE_LEDS
 //
 // ---------------------------------------
@@ -24,19 +22,15 @@
 // 
 //  To use the original graphics:
 //    _SAVE_MEMORY 
-//    OLD_OBSTACLES
 //    _USE_LEDS
 //
 //  To use new obstacle graphics and dashboard:
 //    _SAVE_MEMORY 
-//    _OLD_OBSTACLES
 //    USE_LEDS
 //
 #define SAVE_MEMORY
-#define _OLD_OBSTACLES
 #define USE_LEDS
 #define USE_ISLAND_3
-#define USE_ROLL_MOVEMENT
 #define HIGH_SCORES
 
 // Remove comment // to free up some PROGMEM for DEBUG
@@ -71,6 +65,11 @@ enum class GameState : uint8_t {
 #endif
 
 
+#define _PLAYER_US
+#define PLAYER_JAPANESE
+
+
+
 // Image array offsets ..
 
 #define IMAGES_MASK_OFFSET              8
@@ -80,13 +79,8 @@ enum class GameState : uint8_t {
 #define IMAGES_SHRINK_MASK_OFFSET       28
 
 #define PLAYER_MOVE_NONE                0
-#ifdef OLD_OBSTACLES
-  #define PLAYER_MOVE_UP                1
-  #define PLAYER_MOVE_DOWN              2
-#else
-  #define PLAYER_MOVE_UP                1
-  #define PLAYER_MOVE_DOWN              -1
-#endif
+#define PLAYER_MOVE_UP                  1
+#define PLAYER_MOVE_DOWN                -1
 
 #define NUMBER_OF_ENEMIES               6
 #define NUMBER_OF_MISSIONS              5

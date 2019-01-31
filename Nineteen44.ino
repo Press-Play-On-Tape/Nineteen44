@@ -62,11 +62,7 @@ Enemy enemies[NUMBER_OF_ENEMIES] = {
   { EnemyType::Zero, enemy_zero_images },
 };
 
-#ifdef OLD_OBSTACLES
-Obstacle obstacle = { -20, 24, fuel, fuel_mask, 0, 0 };
-#else
 Obstacle obstacle = { -20, 24, fuel, 0, 0 };
-#endif
 
 uint8_t playerBulletIdx = 0;
 uint8_t enemyBulletIdx = 0;
@@ -437,9 +433,6 @@ void launchObstacle() {
   SQ7x8 maxValue = 0;
 
   const uint8_t *bitmap = nullptr;
-  #ifdef OLD_OBSTACLES  
-  const uint8_t *mask = nullptr;
-  #endif
 
   if (player.getFuel() <= 4) {
     type = ObstacleType::Fuel;
@@ -454,36 +447,24 @@ void launchObstacle() {
       minValue = (obstacleBulletsValue / (SQ7x8)2);
       maxValue = obstacleBulletsValue;
       bitmap = bullets;
-      #ifdef OLD_OBSTACLES
-      mask = bullets_mask;
-      #endif
       break;
 
     case ObstacleType::Fuel:
       minValue = (obstacleFuelValue / (SQ7x8)2);
       maxValue = obstacleFuelValue;
       bitmap = fuel;
-      #ifdef OLD_OBSTACLES
-      mask = fuel_mask;
-      #endif   
       break;
 
     case ObstacleType::Health:
       minValue = (obstacleHealthValue / (SQ7x8)2);
       maxValue = obstacleHealthValue;
       bitmap = health;
-      #ifdef OLD_OBSTACLES
-      mask = health_mask;
-      #endif   
       break;
 
     case ObstacleType::PowerUp:
       minValue = (obstacleBulletsValue / (SQ7x8)2);
       maxValue = obstacleBulletsValue;
       bitmap = power_up;
-      #ifdef OLD_OBSTACLES
-      mask = power_up_mask;
-      #endif
       break;
       
     case ObstacleType::Count:
@@ -494,17 +475,10 @@ void launchObstacle() {
   obstacle.setObstacleType(type);
   obstacle.setEnabled(true);
   obstacle.setX(WIDTH);
-  #ifdef OLD_OBSTACLES
-  obstacle.setY(random(0, 54));
-  #else
   obstacle.setY(random(0, 51));
-  #endif
   obstacle.setSpeed(randomSFixed<7,8>(1, 2));
   obstacle.setValue(randomSFixed<7,8>(minValue, maxValue));
   obstacle.setBitmap(bitmap);
-  #ifdef OLD_OBSTACLES
-  obstacle.setMask(mask);
-  #endif
 
   obstacleLaunchCountdown = random(obstacleLaunchDelayMin, obstacleLaunchDelayMax);
 

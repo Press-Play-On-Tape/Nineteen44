@@ -12,22 +12,14 @@ Player::Player(const uint8_t * const * images) : Plane(images) {
 
 }
 
-#ifdef USE_ROLL_MOVEMENT
 void Player::setY(const SQ15x16 value) {
 
-  #ifdef OLD_OBSTACLES
-  _movement = PLAYER_MOVE_NONE;
-  if (value < _y) _movement = PLAYER_MOVE_UP;
-  if (value > _y) _movement = PLAYER_MOVE_DOWN;
-  #else
   if (value < _y) _movement = _movement + PLAYER_MOVE_UP;
   if (value > _y) _movement = _movement + PLAYER_MOVE_DOWN;
-  #endif
 
   _y = value;
 
 }
-#endif
 
 void Player::initGame() {
             
@@ -160,27 +152,28 @@ void Player::renderImage(uint8_t frame) {
 
       if (_health > -3) {
 
-        #ifdef USE_ROLL_MOVEMENT
-          #ifdef OLD_OBSTACLES
-            if (roll != 0 || (roll == 0 && _movement == PLAYER_MOVE_NONE)) {
-          #else
-            if (roll != 0 || (roll == 0 && absT(_movement) < 4)) {
-          #endif
+        #ifdef PLAYER_US
+          if (roll != 0 || (roll == 0 && absT(_movement) < 4)) {
+            Sprites::drawExternalMask(rollX, y, pgm_read_word_near(&_bitmaps[static_cast<uint8_t>(roll) ]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + (static_cast<uint8_t>(roll) )]), (roll == 0 ? frame : 0), 0);
+          }
+          else {
+              Sprites::drawExternalMask(rollX, y, p38_move, p38_move_mask, (_movement > 0 ? 0 : 1), (_movement > 0 ? 0 : 1));
+              if (_movement < 0) _movement++;
+              if (_movement > 0) _movement--;
+          }
         #endif
-          Sprites::drawExternalMask(rollX, y, pgm_read_word_near(&_bitmaps[static_cast<uint8_t>(roll) ]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + (static_cast<uint8_t>(roll) )]), (roll == 0 ? frame : 0), 0);
-        #ifdef USE_ROLL_MOVEMENT
-        }
-        else {
-          #ifdef OLD_OBSTACLES
-            Sprites::drawExternalMask(rollX, y, p38_move, p38_move_mask, _movement - 1, _movement - 1);
-            _movement = PLAYER_MOVE_NONE;
-          #else
-            Sprites::drawExternalMask(rollX, y, p38_move, p38_move_mask, (_movement > 0 ? 0 : 1), (_movement > 0 ? 0 : 1));
-            if (_movement < 0) _movement++;
-            if (_movement > 0) _movement--;
-          #endif
-        }
+
+        #ifdef PLAYER_JAPANESE
+          if (roll != 0 || (roll == 0 && absT(_movement) < 4)) {
+            Sprites::drawExternalMask(rollX, y, pgm_read_word_near(&_bitmaps[static_cast<uint8_t>(roll) ]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + (static_cast<uint8_t>(roll) )]), (roll == 0 ? frame : 0), 0);
+          }
+          else {
+              Sprites::drawExternalMask(rollX, y, zero_move, zero_move_mask, (_movement > 0 ? 0 : 1), (_movement > 0 ? 0 : 1));
+              if (_movement < 0) _movement++;
+              if (_movement > 0) _movement--;
+          }
         #endif
+
       }
 
     }
