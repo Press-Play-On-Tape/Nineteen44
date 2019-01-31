@@ -22,10 +22,7 @@ class Player : public Plane {
     bool inRoll();
     bool getPowerUp();
 
-    #ifdef USE_ROLL_MOVEMENT
     void setY(const SQ15x16 value);
-    #endif
-    
     void setFuel(const SQ7x8 value);
     void decFuel(const SQ7x8 value);
     void setBullets(const uint8_t value);
@@ -43,9 +40,7 @@ class Player : public Plane {
     SQ7x8 _fuel;
     uint8_t _rollState;
     uint8_t _powerUp;
-    #ifdef USE_ROLL_MOVEMENT
     int8_t _movement;
-    #endif
     
 };
 

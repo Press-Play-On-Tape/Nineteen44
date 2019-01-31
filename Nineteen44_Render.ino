@@ -100,7 +100,14 @@ void renderEndOfMission() {
     renderScenery_BelowPlanes();
     moveAndRenderEnemies(false);
 
+    #ifdef PLAYER_US
     Sprites::drawExternalMask(player.getX().getInteger() + i, player.getY().getInteger(), p38_0, p38_mask_0, (i % 6 < 3), 0);
+    #endif
+
+    #ifdef PLAYER_JAPANESE
+    Sprites::drawExternalMask(player.getX().getInteger() + i, player.getY().getInteger(), zero_0, zero_mask_0, (i % 6 < 3), 0);
+    #endif
+
     renderScenery_AbovePlanes();
 
     renderScoreboard();
