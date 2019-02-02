@@ -248,7 +248,7 @@ enum class EnemyType : uint8_t {
   Bomber,
   Boat,
   Count,
-  First = Zero,
+  First = Fighter1,
   Last = Boat
 };
 

@@ -54,12 +54,12 @@ const SQ7x8 obstacleHealthValueDec[] =   { HEALTH_DECREMENT_L0, HEALTH_DECREMENT
 Player player = { player_images };
 
 Enemy enemies[NUMBER_OF_ENEMIES] = {
-  { EnemyType::Fighter1, enemy_zero_images },
-  { EnemyType::Fighter1, enemy_zero_images },
-  { EnemyType::Fighter1, enemy_zero_images },
-  { EnemyType::Fighter1, enemy_zero_images },
-  { EnemyType::Fighter1, enemy_zero_images },
-  { EnemyType::Fighter1, enemy_zero_images },
+  { EnemyType::Fighter1, enemy_fighter1_images },
+  { EnemyType::Fighter1, enemy_fighter1_images },
+  { EnemyType::Fighter1, enemy_fighter1_images },
+  { EnemyType::Fighter1, enemy_fighter1_images },
+  { EnemyType::Fighter1, enemy_fighter1_images },
+  { EnemyType::Fighter1, enemy_fighter1_images },
 };
 
 Obstacle obstacle = { -20, 24, fuel, 0, 0 };
@@ -549,11 +549,11 @@ void launchFormation(const int8_t *formation) {
     switch ((EnemyType)pgm_read_byte(&formation[enemyIdx])) {
 
       case EnemyType::Fighter1:
-        enemies[i] = { EnemyType::Fighter1, enemy_zero_images };
+        enemies[i] = { EnemyType::Fighter1, enemy_fighter1_images };
         break;
 
       case EnemyType::Fighter2:
-        enemies[i] = { EnemyType::Fighter2, enemy_zero_hollow_images };
+        enemies[i] = { EnemyType::Fighter2, enemy_fighter2_images };
         break;
 
       case EnemyType::Bomber:
