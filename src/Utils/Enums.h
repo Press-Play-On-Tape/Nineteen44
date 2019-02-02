@@ -1,5 +1,8 @@
 #pragma once
 
+// Remove comment // to free up some PROGMEM for DEBUG
+#define DEBUG
+
 #include "FixedPoints.h"
 #include "FixedPointsCommon.h"
 #include "Arduboy2Ext.h"
@@ -32,9 +35,6 @@
 #define USE_LEDS
 #define USE_ISLAND_3
 #define HIGH_SCORES
-
-// Remove comment // to free up some PROGMEM for DEBUG
-//#define DEBUG
 
 
 const int8_t PROGMEM movement_x_offset[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
@@ -243,8 +243,8 @@ struct SceneryItem {
 };
 
 enum class EnemyType : uint8_t {
-  Zero,
-  ZeroHollow,
+  Fighter1,
+  Fighter2,
   Bomber,
   Boat,
   Count,

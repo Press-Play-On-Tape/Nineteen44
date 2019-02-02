@@ -54,12 +54,12 @@ const SQ7x8 obstacleHealthValueDec[] =   { HEALTH_DECREMENT_L0, HEALTH_DECREMENT
 Player player = { player_images };
 
 Enemy enemies[NUMBER_OF_ENEMIES] = {
-  { EnemyType::Zero, enemy_zero_images },
-  { EnemyType::Zero, enemy_zero_images },
-  { EnemyType::Zero, enemy_zero_images },
-  { EnemyType::Zero, enemy_zero_images },
-  { EnemyType::Zero, enemy_zero_images },
-  { EnemyType::Zero, enemy_zero_images },
+  { EnemyType::Fighter1, enemy_zero_images },
+  { EnemyType::Fighter1, enemy_zero_images },
+  { EnemyType::Fighter1, enemy_zero_images },
+  { EnemyType::Fighter1, enemy_zero_images },
+  { EnemyType::Fighter1, enemy_zero_images },
+  { EnemyType::Fighter1, enemy_zero_images },
 };
 
 Obstacle obstacle = { -20, 24, fuel, 0, 0 };
@@ -216,9 +216,6 @@ void loop() {
  * -----------------------------------------------------------------------------------------------------------------------------
  */
 void gameLoop() {
-
-  uint8_t offsetY = (mission >= 99 ? 0 : (mission >= 9 ? 3 : 6));
-  uint8_t offsetNumber = (mission >= 99 ? 46 : (mission >= 9 ? 44 : 41));
 
   renderScenery(arduboy.getFrameCount(2));
   
@@ -551,12 +548,12 @@ void launchFormation(const int8_t *formation) {
 
     switch ((EnemyType)pgm_read_byte(&formation[enemyIdx])) {
 
-      case EnemyType::Zero:
-        enemies[i] = { EnemyType::Zero, enemy_zero_images };
+      case EnemyType::Fighter1:
+        enemies[i] = { EnemyType::Fighter1, enemy_zero_images };
         break;
 
-      case EnemyType::ZeroHollow:
-        enemies[i] = { EnemyType::ZeroHollow, enemy_zero_hollow_images };
+      case EnemyType::Fighter2:
+        enemies[i] = { EnemyType::Fighter2, enemy_zero_hollow_images };
         break;
 
       case EnemyType::Bomber:
