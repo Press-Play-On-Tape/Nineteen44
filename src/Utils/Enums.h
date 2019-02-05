@@ -124,7 +124,8 @@ enum class GameState : uint8_t {
 #define PLAYER_MOVEMENT_INC_LEFT        0.90
 #define PLAYER_MOVEMENT_INC_RIGHT       0.80
 #define PLAYER_BULLETS_MAX              15
-#define PLAYER_HIT_BULLET_DECREMENT     0.25 
+#define PLAYER_HIT_BULLET_DEC_NORM      0.25 
+#define PLAYER_HIT_BULLET_DEC_DOUBLE    0.50 
 #define PLAYER_HIT_PLANE_DECREMENT      0.12 
 
 #define PLAYER_WIDTH                    18
@@ -132,7 +133,10 @@ enum class GameState : uint8_t {
 #define PLAYER_HEIGHT                   19
 #define PLAYER_HEIGHT_HALF              9
 
-#define ENEMY_BULLETS_MAX               10
+#define ENEMY_BULLETS_MAX_L1            10
+#define ENEMY_BULLETS_MAX_L2            15
+#define ENEMY_BULLETS_MAX_L3            20
+#define ENEMY_BULLETS_MAX               ENEMY_BULLETS_MAX_L3
 #define ENEMY_NO_BULLETS_FIRED_MAX      3
 #define ENEMY_BOAT_TURRENT_X            24
 #define ENEMY_BOAT_TURRENT_Y            3
@@ -273,6 +277,12 @@ enum class Direction : uint8_t {
   NorthWest,
   Count,
   None,
+};
+
+enum class BulletImage : uint8_t {
+  Single,
+  Slash,
+  BackSlash,
 };
 
 #define SCENERY_INACTIVE -91

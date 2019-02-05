@@ -11,7 +11,7 @@ void moveAndRenderPlayerBullets() {
     playerBullets[i].move();
     
     if (playerBullets[i].getEnabled()) {
-      Sprites::drawPlusMask(playerBullets[i].getX() - 1, playerBullets[i].getY() - 1, bullet_img, 0);
+      Sprites::drawPlusMask(playerBullets[i].getX() - 1, playerBullets[i].getY() - 1, bullet_img[static_cast<uint8_t>(BulletImage::Single)], 0);
     }
     
   }
@@ -25,12 +25,17 @@ void moveAndRenderPlayerBullets() {
  */
 void moveAndRenderEnemyBullets() {
   
-  for (uint8_t i = 0; i < ENEMY_BULLETS_MAX; ++i) {
+  for (uint8_t i = 0; i < enemyBulletsMax[level]; ++i) {
     
     enemyBullets[i].move();
     
     if (enemyBullets[i].getEnabled()) {
-      Sprites::drawPlusMask(enemyBullets[i].getX() - 1, enemyBullets[i].getY() - 1, bullet_img, 0);
+
+      uint8_t x = enemyBullets[i].getX() - 1;
+      uint8_t y = enemyBullets[i].getY() - 1;
+
+      Sprites::drawPlusMask(x, y, bullet_img[static_cast<uint8_t>(enemyBullets[i].getBulletImage())], 0);
+
     }
     
   }

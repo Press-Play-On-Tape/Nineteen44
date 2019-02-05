@@ -51,6 +51,8 @@ const SQ7x8 obstacleBulletsValueDec[] =  { BULLETS_DECREMENT_L0, BULLETS_DECREME
 const SQ7x8 obstacleFuelValueDec[] =     { FUEL_DECREMENT_L0, FUEL_DECREMENT_L1, FUEL_DECREMENT_L2 };
 const SQ7x8 obstacleHealthValueDec[] =   { HEALTH_DECREMENT_L0, HEALTH_DECREMENT_L1, HEALTH_DECREMENT_L2 };
 
+const SQ7x8 playerHitBulletDec[] =       { PLAYER_HIT_BULLET_DEC_NORM, PLAYER_HIT_BULLET_DEC_DOUBLE, PLAYER_HIT_BULLET_DEC_NORM, PLAYER_HIT_BULLET_DEC_NORM };  // Index positions defined by EnemyType
+
 Player player = { player_images };
 
 Enemy enemies[NUMBER_OF_ENEMIES] = {
@@ -69,6 +71,7 @@ uint8_t enemyBulletIdx = 0;
 
 Bullet playerBullets[PLAYER_BULLETS_MAX];
 EnemyBullet enemyBullets[ENEMY_BULLETS_MAX];
+uint8_t enemyBulletsMax[] = { ENEMY_BULLETS_MAX_L1, ENEMY_BULLETS_MAX_L2, ENEMY_BULLETS_MAX_L3 };
 
 uint16_t obstacleLaunchCountdown = OBSTACLE_LAUNCH_DELAY_MIN;
 uint8_t enemyShotCountdown = 5;
@@ -831,7 +834,7 @@ void checkForPlayerShot() {
   
   Rect playerRect = player.getRect();
   
-  for (uint8_t i = 0; i < ENEMY_BULLETS_MAX; ++i) {
+  for (uint8_t i = 0; i < enemyBulletsMax[level]; ++i) {
   
     if (enemyBullets[i].getEnabled()) {
   
@@ -839,10 +842,8 @@ void checkForPlayerShot() {
     
       if (arduboy.collide(bulletPoint, playerRect)) {
   
-        /* TODO: Could add logic to make wing hit different to body hit */
-  
         enemyBullets[i].setEnabled(false);
-        player.decHealth(PLAYER_HIT_BULLET_DECREMENT);
+        player.decHealth(playerHitBulletDec[static_cast<uint8_t>(enemyBullets[i].getEnemyType())]);
 
         #ifdef USE_LEDS             
         arduboy.setRGBled(RED_LED, 8);
@@ -915,9 +916,10 @@ void checkCanEnemyShoot() {
         enemyBullets[enemyBulletIdx].setY(enemies[i].getY().getInteger() + (enemies[i].getEnemyType() == EnemyType::Boat ? ENEMY_BOAT_TURRENT_CENTER_Y : (enemies[i].getHeight() / 2)));
         enemyBullets[enemyBulletIdx].setDirection(enemies[i].getEnemyType() == EnemyType::Boat ? enemies[i].getTurretDirection() : enemies[i].getDirection());
         enemyBullets[enemyBulletIdx].setEnabled(true);
+        enemyBullets[enemyBulletIdx].setEnemyType(enemies[i].getEnemyType());
         
         ++enemyBulletIdx;
-        if (enemyBulletIdx == ENEMY_BULLETS_MAX) enemyBulletIdx = 0;
+        if (enemyBulletIdx == enemyBulletsMax[level]) enemyBulletIdx = 0;
 
         if (!sound.playing()) sound.tones(machine_gun_enemy);
 

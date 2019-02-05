@@ -11,6 +11,16 @@ class EnemyBullet : public Bullet {
 
     EnemyBullet();
 
+    EnemyType getEnemyType();
+    uint8_t getX();
+    uint8_t getY();
+    BulletImage getBulletImage();
+
+    void setEnemyType(const EnemyType value);
     void move();
+  
+  protected:
+  
+    EnemyType _enemyType;
 
 };
