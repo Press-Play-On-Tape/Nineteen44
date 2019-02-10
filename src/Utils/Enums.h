@@ -137,7 +137,7 @@ enum class GameState : uint8_t {
 #define ENEMY_BULLETS_MAX_L2            15
 #define ENEMY_BULLETS_MAX_L3            20
 #define ENEMY_BULLETS_MAX               ENEMY_BULLETS_MAX_L3
-#define ENEMY_NO_BULLETS_FIRED_MAX      3
+#define ENEMY_NO_BULLETS_FIRED_MAX      5
 #define ENEMY_BOAT_TURRENT_X            24
 #define ENEMY_BOAT_TURRENT_Y            3
 #define ENEMY_BOAT_TURRENT_CENTER_X     ENEMY_BOAT_TURRENT_X + 5

@@ -1,3 +1,4 @@
+#ifndef DEBUG
 const uint16_t score[] PROGMEM = {
   NOTE_CS6,168, NOTE_REST,176, NOTE_CS6,168, NOTE_REST,348, NOTE_GS5,168, NOTE_CS6,168, 
   NOTE_B5,1548, NOTE_A5,168, NOTE_REST,176, NOTE_A5,168, NOTE_REST,348, NOTE_A5,168, 
@@ -76,3 +77,42 @@ const uint16_t hit_by_bullets[] PROGMEM = {
   NOTE_A3,9, NOTE_D3,10, NOTE_C3,6, NOTE_F3,10, 
   TONES_END
 };
+#endif
+
+#ifdef DEBUG
+const uint16_t score[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t mission_start[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t mission_success[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t mission_failure[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t collect_obstacle[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t machine_gun_player[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t machine_gun_enemy[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t hit_by_plane[] PROGMEM = {
+  TONES_END
+};
+
+const uint16_t hit_by_bullets[] PROGMEM = {
+  TONES_END
+};
+#endif

@@ -917,7 +917,7 @@ void checkCanEnemyShoot() {
         enemyBullets[enemyBulletIdx].setDirection(enemies[i].getEnemyType() == EnemyType::Boat ? enemies[i].getTurretDirection() : enemies[i].getDirection());
         enemyBullets[enemyBulletIdx].setEnabled(true);
         enemyBullets[enemyBulletIdx].setEnemyType(enemies[i].getEnemyType());
-        
+
         ++enemyBulletIdx;
         if (enemyBulletIdx == enemyBulletsMax[level]) enemyBulletIdx = 0;
 

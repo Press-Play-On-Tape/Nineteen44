@@ -104,6 +104,98 @@ const uint8_t PROGMEM mission_04[] = {
   SCENERY_BOAT | 5,    // Boat
   SCENERY_NONE | 6,};
 
+/*
+
+const uint8_t PROGMEM mission_00[] = { 
+  14,
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,    // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,   // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0 
+  };
+
+const uint8_t PROGMEM mission_01[] = { 
+  14,
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,    // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,   // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0 
+};
+
+const uint8_t PROGMEM mission_02[] = { 
+  14, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,    // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,   // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0 
+};
+
+const uint8_t PROGMEM mission_03[] = { 
+  14, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,    // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,   // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0 
+};
+
+const uint8_t PROGMEM mission_04[] = { 
+  14, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,    // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_BOAT | 0, 
+  SCENERY_BOAT | 0,   // Boat
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0, 
+  SCENERY_NONE | 0 
+};
+*/
 
 /* -----------------------------------------------------------------------------------------------------------------------------
  *  Formations
@@ -117,7 +209,6 @@ const uint8_t PROGMEM mission_04[] = {
  *           [Number of Hits]  
  * -----------------------------------------------------------------------------------------------------------------------------
  */
-
 
 const int8_t PROGMEM formation_00[] = {
   2, 
