@@ -5,7 +5,11 @@
  *  End of mission / game loop ..
  * -----------------------------------------------------------------------------------------------------------------------------
  */
+#ifdef USE_LEVELS
 void endOfSequence_Render(bool endOfLevel) {
+#else
+void endOfSequence_Render() {
+#endif
 
   arduboy.drawHorizontalDottedLine(4, 69, 3);
   arduboy.drawHorizontalDottedLine(4, 69, 32);
@@ -17,12 +21,16 @@ void endOfSequence_Render(bool endOfLevel) {
   }
   else {
 
-    if (endOfLevel) {
-      Sprites::drawOverwrite(6, 8, level_complete, 0);
-    }
-    else {
+    #ifdef USE_LEVELS
+      if (endOfLevel) {
+        Sprites::drawOverwrite(6, 8, level_complete, 0);
+      }
+      else {
+        Sprites::drawOverwrite(6, 8, game_over, 0);
+      }
+    #else
       Sprites::drawOverwrite(6, 8, game_over, 0);
-    }
+    #endif
 
   }
 
@@ -39,27 +47,47 @@ void drawFlyingPair() {
 
 }
 
+#ifdef USE_LEVELS
 void endOfSequence(const uint8_t level) {
+#else
+void endOfSequence() {
+#endif
 
-  bool endOfLevel = false;
+  #ifdef USE_LEVELS
 
-  if (level == 0 && mission == 30) { gameState = GameState::End_Of_Game; endOfLevel = true; } 
-  if (level == 1 && mission == 60) { gameState = GameState::End_Of_Game; endOfLevel = true; }
+    bool endOfLevel = false;
+
+    if (level == 0 && mission == 30) { gameState = GameState::End_Of_Game; endOfLevel = true; } 
+    if (level == 1 && mission == 60) { gameState = GameState::End_Of_Game; endOfLevel = true; }
+
+  #endif
 
   #ifndef HIGH_SCORES
-    uint16_t high = eeprom_read_word((uint16_t *)(EEPROM_SCORE + (level * 2)));
+    #ifdef USE_LEVELS
+      uint16_t high = eeprom_read_word((uint16_t *)(EEPROM_SCORE + (level * 2)));
+    #else
+      uint16_t high = eeprom_read_word((uint16_t *)EEPROM_SCORE));
+    #endif
   #else
     uint16_t high = EEPROM_Utils::getHighScore();
   #endif
 
   if (player.getScore() > high) { 
     #ifndef HIGH_SCORES
-    eeprom_update_word((uint16_t *)(EEPROM_SCORE + (level * 2)), player.getScore());
+      #ifdef USE_LEVELS
+        eeprom_update_word((uint16_t *)(EEPROM_SCORE + (level * 2)), player.getScore());
+      #else
+        eeprom_update_word((uint16_t *)EEPROM_SCORE), player.getScore());
+      #endif
     #endif
     high = player.getScore();
   }
 
-  endOfSequence_Render(endOfLevel); 
+  #ifdef USE_LEVELS
+    endOfSequence_Render(endOfLevel); 
+  #else
+    endOfSequence_Render(); 
+  #endif
 
   if (gameState != GameState::End_Of_Game) {
     Sprites::drawOverwrite(84, 5, usaf, 0);

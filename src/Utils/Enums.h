@@ -35,6 +35,7 @@
 #define USE_LEDS
 #define USE_ISLAND_3
 #define HIGH_SCORES
+#define xx_USE_LEVELS
 
 
 const int8_t PROGMEM movement_x_offset[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
@@ -251,9 +252,7 @@ enum class EnemyType : uint8_t {
   Fighter2,
   Bomber,
   Boat,
-  Count,
-  First = Fighter1,
-  Last = Boat
+  BossGun  //SJHBoss
 };
 
 enum class ObstacleType : uint8_t {

@@ -108,56 +108,71 @@ void introLoop() {
     ArrowState arrowState = static_cast<ArrowState>((introState & 0b00011000) >> 3);
     uint8_t arrowDelay = introState & 0b00000111;
 
-    switch (state) {
+    #ifdef USE_LEVELS
 
-      case IntroState::PressA:
-        Sprites::drawOverwrite(83, 38, splash_press_a, 0);
-        break;
+      switch (state) {
 
-      case IntroState::Level1 ... IntroState::Level3:
-        {
-          uint8_t upX = 36;
-          uint8_t downX = 48;
+        case IntroState::PressA:
+          Sprites::drawOverwrite(83, 38, splash_press_a, 0);
+          break;
 
-          switch (arrowState) {
+        case IntroState::Level1 ... IntroState::Level3:
+          {
+            uint8_t upX = 36;
+            uint8_t downX = 48;
 
-            case ArrowState::None:  
-              break;
+            switch (arrowState) {
 
-            case ArrowState::Lower:
-              downX = downX + 2;
-              break;
+              case ArrowState::None:  
+                break;
 
-            case ArrowState::Upper:
-              upX = upX - 2;
-              break;
+              case ArrowState::Lower:
+                downX = downX + 2;
+                break;
+
+              case ArrowState::Upper:
+                upX = upX - 2;
+                break;
+
+            }
+
+            Sprites::drawSelfMasked(94, downX, arrow_down, 0);
+            Sprites::drawSelfMasked(94, upX, arrow_up, 0);
+          
+            Sprites::drawOverwrite(85, 39, level_select, 0);
+            Sprites::drawOverwrite(106, 40, font4x6_Full, 27 + level);
 
           }
 
-          Sprites::drawSelfMasked(94, downX, arrow_down, 0);
-          Sprites::drawSelfMasked(94, upX, arrow_up, 0);
+          if (arrowDelay > 0) {
+            arrowDelay--;
+            introState = (introState & 0b11111000) | arrowDelay;
+            if (arrowDelay == 0) {
+              introState = introState & 0b11100000;
+            }
+          }
+
+          break;
+
+      }
+
+    #else
+
+      switch (state) {
+
+        case IntroState::PressA:
+          Sprites::drawOverwrite(83, 38, splash_press_a, 0);
+          break;
+
+        default: break;
         
-          Sprites::drawOverwrite(85, 39, level_select, 0);
-          Sprites::drawOverwrite(106, 40, font4x6_Full, 27 + level);
+      }  
 
-        }
-
-        if (arrowDelay > 0) {
-          arrowDelay--;
-          introState = (introState & 0b11111000) | arrowDelay;
-          if (arrowDelay == 0) {
-            introState = introState & 0b11100000;
-          }
-        }
-
-        break;
-
-    }
+    #endif
 
   }
 
-  //arduboy.display(true);
-
+  #ifdef USE_LEVELS
   {
    
     uint8_t justPressed = arduboy.justPressedButtons();
@@ -229,9 +244,30 @@ void introLoop() {
       gameState = GameState::Game_Init;
       mission = 0; 
       
-    }  
+    }
 
   }
+  #else
+
+    uint8_t justPressed = arduboy.justPressedButtons();
+    IntroState state = static_cast<IntroState>((introState & 0b11100000) >> 5);
+
+    if (justPressed & B_BUTTON) {
+      if (state != IntroState::PressA) {
+        introState = 0;
+      }
+      else {
+        gameState = GameState::Credits_Init;   
+      }
+    }
+
+    if (justPressed & A_BUTTON) { 
+      
+      gameState = GameState::Game_Init;
+      mission = 0; 
+      
+    }
+  #endif  
 
 }
 
@@ -255,13 +291,23 @@ void gameInit() {
   }
   
   {
-    bool initConsumables = false;
+    #ifdef USE_LEVELS
+    
+      bool initConsumables = false;
 
-    if (level < 2)                   { initConsumables = true; } 
-    if (level == 2 && mission == 60) { initConsumables = true; }
+      if (level < 2)                   { initConsumables = true; } 
+      if (level == 2 && mission == 60) { initConsumables = true; }
+
+    #endif
 
     initSceneryItems();
+
+    #ifdef USE_LEVELS
     player.initMission(initConsumables);
+    #else
+    player.initMission();
+    #endif
+
     obstacle.setEnabled(false);
 
   }

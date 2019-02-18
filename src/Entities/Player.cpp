@@ -24,12 +24,20 @@ void Player::setY(const SQ15x16 value) {
 void Player::initGame() {
             
   _score = 0;
+  #ifdef USE_LEVELS
   initMission(true);
+  #else
+  initMission();
+  #endif
   
 }
 
+#ifdef USE_LEVELS
 void Player::initMission(bool initConsumables) {
-            
+#else
+void Player::initMission() {
+#endif
+
   _powerUp = false;
   _fuel = FUEL_MAX;
   _health = HEALTH_MAX; 
@@ -39,20 +47,30 @@ void Player::initMission(bool initConsumables) {
   _x = 1;
   _y = 24;
 
-  if (initConsumables) {
+  #ifdef USE_LEVELS
+    
+    if (initConsumables) {
 
-    _fuel = FUEL_MAX;
-    _health = HEALTH_MAX; 
-    _bullets = BULLETS_MAX;
+      _fuel = FUEL_MAX;
+      _health = HEALTH_MAX; 
+      _bullets = BULLETS_MAX;
 
-  }
-  else {
+    }
+    else {
+
+      if (_fuel < INIT_FUEL_MIN)         _fuel = INIT_FUEL_MIN;
+      if (_health < INIT_HEALTH_MIN)     _health = INIT_HEALTH_MIN;
+      if (_bullets < INIT_BULLETS_MIN)   _bullets = INIT_BULLETS_MIN;
+
+    }
+
+  #else
 
     if (_fuel < INIT_FUEL_MIN)         _fuel = INIT_FUEL_MIN;
     if (_health < INIT_HEALTH_MIN)     _health = INIT_HEALTH_MIN;
     if (_bullets < INIT_BULLETS_MIN)   _bullets = INIT_BULLETS_MIN;
 
-  }
+  #endif
   
 }
 

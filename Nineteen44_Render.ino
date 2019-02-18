@@ -25,8 +25,12 @@ void moveAndRenderPlayerBullets() {
  */
 void moveAndRenderEnemyBullets() {
   
+  #ifdef USE_LEVELS
   for (uint8_t i = 0; i < enemyBulletsMax[level]; ++i) {
-    
+  #else
+  for (uint8_t i = 0; i < ENEMY_BULLETS_MAX_L3; ++i) {
+  #endif
+  
     enemyBullets[i].move();
     
     if (enemyBullets[i].getEnabled()) {

@@ -75,7 +75,10 @@ uint8_t enemyBulletsMax[] = { ENEMY_BULLETS_MAX_L1, ENEMY_BULLETS_MAX_L2, ENEMY_
 
 uint16_t obstacleLaunchCountdown = OBSTACLE_LAUNCH_DELAY_MIN;
 uint8_t enemyShotCountdown = 5;
+
+#ifdef USE_LEVELS
 uint8_t level = 0;
+#endif
 
 uint8_t mission = 0;                                        // Mission currently being played
 uint8_t missionIdx = 0;                                     // Byte index within current mission
@@ -133,7 +136,10 @@ void setup() {
   obstacleFuelValue = FUEL_MAX;
 
   frameRate = INIT_FRAME_RATE;
+  
+  #ifdef USE_LEVELS
   level = eeprom_read_byte(EEPROM_LEVEL);
+  #endif
   
   arduboy.setFrameRate(frameRate);
   arduboy.initRandomSeed();
@@ -172,7 +178,11 @@ void loop() {
 
     case GameState::End_Of_Mission:
     case GameState::End_Of_Game:
-      endOfSequence(level);
+      #ifdef USE_LEVELS
+        endOfSequence(level);
+      #else
+        endOfSequence();
+      #endif
       break;
     
     case GameState::Credits_Init:
@@ -467,8 +477,7 @@ void launchObstacle() {
       bitmap = power_up;
       break;
       
-    case ObstacleType::Count:
-      break;
+    default: break;
      
   }
 
@@ -508,13 +517,27 @@ void launchMission(bool firstFormation, const uint8_t *missionRef) {
 
   if (firstFormation) {
 
-    frameRate = frameRate + frameRateInc[level];
-    obstacleLaunchDelayMin = obstacleLaunchDelayMin + obstacleLaunchDelayInc[level];
-    obstacleLaunchDelayMax = obstacleLaunchDelayMax + obstacleLaunchDelayInc[level];
+    #ifdef USE_LEVELS
 
-    if (obstacleBulletsValue > BULLETS_MIN)  obstacleBulletsValue = obstacleBulletsValue - obstacleBulletsValueDec[level];
-    if (obstacleHealthValue > HEALTH_MIN)    obstacleHealthValue = obstacleHealthValue - obstacleHealthValueDec[level];
-    if (obstacleFuelValue > FUEL_MIN)        obstacleFuelValue = obstacleFuelValue - obstacleFuelValueDec[level];
+      frameRate = frameRate + frameRateInc[level];
+      obstacleLaunchDelayMin = obstacleLaunchDelayMin + obstacleLaunchDelayInc[level];
+      obstacleLaunchDelayMax = obstacleLaunchDelayMax + obstacleLaunchDelayInc[level];
+
+      if (obstacleBulletsValue > BULLETS_MIN)  obstacleBulletsValue = obstacleBulletsValue - obstacleBulletsValueDec[level];
+      if (obstacleHealthValue > HEALTH_MIN)    obstacleHealthValue = obstacleHealthValue - obstacleHealthValueDec[level];
+      if (obstacleFuelValue > FUEL_MIN)        obstacleFuelValue = obstacleFuelValue - obstacleFuelValueDec[level];
+
+    #else
+
+      frameRate = frameRate + FRAME_RATE_INC_L2;
+      obstacleLaunchDelayMin = obstacleLaunchDelayMin + OBSTACLE_LAUNCH_DELAY_INC_L2;
+      obstacleLaunchDelayMax = obstacleLaunchDelayMax + OBSTACLE_LAUNCH_DELAY_INC_L2;
+
+      if (obstacleBulletsValue > BULLETS_MIN)  obstacleBulletsValue = obstacleBulletsValue - BULLETS_DECREMENT_L2;
+      if (obstacleHealthValue > HEALTH_MIN)    obstacleHealthValue = obstacleHealthValue - HEALTH_DECREMENT_L2;
+      if (obstacleFuelValue > FUEL_MIN)        obstacleFuelValue = obstacleFuelValue - FUEL_DECREMENT_L2;
+
+    #endif
 
     arduboy.setFrameRate(frameRate);
 
@@ -567,8 +590,7 @@ void launchFormation(const int8_t *formation) {
         enemies[i] = { EnemyType::Boat, enemy_boat };
         break;
 
-      case EnemyType::Count:
-        break;
+      default: break;
       
     }
 
@@ -834,8 +856,12 @@ void checkForPlayerShot() {
   
   Rect playerRect = player.getRect();
   
+  #ifdef USE_LEVELS
   for (uint8_t i = 0; i < enemyBulletsMax[level]; ++i) {
-  
+  #else
+  for (uint8_t i = 0; i < ENEMY_BULLETS_MAX_L3; ++i) {
+  #endif
+
     if (enemyBullets[i].getEnabled()) {
   
       Point bulletPoint = { enemyBullets[i].getX(), enemyBullets[i].getY() };
@@ -919,7 +945,12 @@ void checkCanEnemyShoot() {
         enemyBullets[enemyBulletIdx].setEnemyType(enemies[i].getEnemyType());
         
         ++enemyBulletIdx;
+        #ifdef USE_LEVELS
         if (enemyBulletIdx == enemyBulletsMax[level]) enemyBulletIdx = 0;
+        #else
+        if (enemyBulletIdx == ENEMY_BULLETS_MAX_L3) enemyBulletIdx = 0;
+        #endif
+
 
         if (!sound.playing()) sound.tones(machine_gun_enemy);
 
