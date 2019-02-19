@@ -188,6 +188,9 @@ void Enemy::renderImage() {
       
     }
 
+
+    // Render explosion if the enemy is dying ..
+
     if (_health <= 0) {
  
       _health = _health - 0.25;

@@ -36,6 +36,7 @@
 #define USE_ISLAND_3
 #define HIGH_SCORES
 #define xx_USE_LEVELS
+#define BOSS
 
 
 const int8_t PROGMEM movement_x_offset[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
@@ -143,6 +144,9 @@ enum class GameState : uint8_t {
 #define ENEMY_BOAT_TURRENT_Y            3
 #define ENEMY_BOAT_TURRENT_CENTER_X     ENEMY_BOAT_TURRENT_X + 5
 #define ENEMY_BOAT_TURRENT_CENTER_Y     ENEMY_BOAT_TURRENT_Y + 5
+
+#define ENEMY_BOSS_GUN_WIDTH_X          8
+#define ENEMY_BOSS_GUN_WIDTH_Y          8
 
 #define SCOREBOARD_OUTER_RECT_X         120
 #define SCOREBOARD_OUTER_RECT_WIDTH     8
@@ -252,7 +256,10 @@ enum class EnemyType : uint8_t {
   Fighter2,
   Bomber,
   Boat,
-  BossGun  //SJHBoss
+  #ifdef BOSS
+  BossGun,
+  BossPlane
+  #endif
 };
 
 enum class ObstacleType : uint8_t {

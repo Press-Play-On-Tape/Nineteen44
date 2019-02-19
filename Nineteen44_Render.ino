@@ -81,11 +81,21 @@ void moveAndRenderEnemies(bool renderBoats) {
                                 && enemyRect.x + enemyRect.width > 0 && enemyRect.x < WIDTH 
                                 && enemyRect.y + enemyRect.height >= 0 && enemyRect.y < HEIGHT ) {
 
-      if (enemies[i].getEnemyType() == EnemyType::Boat) {
+      EnemyType enemyType = enemies[i].getEnemyType();
 
-        enemies[i].setTurretDirection(aimAtPlayer(i));
+      #ifdef BOSS
+        if (enemyType == EnemyType::Boat || enemyType == EnemyType::BossGun) {
 
-      }
+          enemies[i].setTurretDirection(aimAtPlayer(i));
+
+        }
+      #else
+        if (enemyType == EnemyType::Boat) {
+
+          enemies[i].setTurretDirection(aimAtPlayer(i));
+
+        }
+      #endif
 
       enemies[i].renderImage();
 

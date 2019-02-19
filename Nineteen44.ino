@@ -85,6 +85,7 @@ uint8_t missionIdx = 0;                                     // Byte index within
 uint8_t mission_formations = 0;                             // Number of formations in the current mission.
 uint8_t mission_formations_left = 0;                        // Number of formations left within current mission.
 uint8_t formation = 0;
+bool formation_boss = false;
 uint8_t introState;
 uint8_t intro;
 uint16_t frameRate = INIT_FRAME_RATE;
@@ -281,9 +282,12 @@ void gameLoop() {
     
     if ((pressed & UP_BUTTON) && player.getY() > PLAYER_MOVEMENT_INC_UP)                                     { player.setY(player.getY() - PLAYER_MOVEMENT_INC_UP); }
     if ((pressed & DOWN_BUTTON) && player.getY() < HEIGHT - PLAYER_HEIGHT)                                   { player.setY(player.getY() + PLAYER_MOVEMENT_INC_DOWN); }
+
+    #ifdef BOSS
     if ((pressed & LEFT_BUTTON) && player.getX() > PLAYER_MOVEMENT_INC_LEFT)                                 { player.setX(player.getX() - PLAYER_MOVEMENT_INC_LEFT); }
     if ((pressed & RIGHT_BUTTON) && player.getX() < WIDTH - PLAYER_WIDTH - SCOREBOARD_OUTER_RECT_WIDTH)      { player.setX(player.getX() + PLAYER_MOVEMENT_INC_RIGHT); }
-  
+    #endif 
+
     if (justPressed & B_BUTTON)                                                                              { player.startRoll(); }
                                                                                                                     
     if (justPressed & A_BUTTON) {
@@ -500,6 +504,10 @@ void launchObstacle() {
  */
 void launchMission(bool firstFormation, const uint8_t *missionRef) {
 
+  #ifdef BOSS
+  formation_boss = false;
+  #endif
+
   if (firstFormation) {
     missionIdx = 0;
     mission_formations_left = pgm_read_byte(&missionRef[missionIdx++]);
@@ -590,6 +598,19 @@ void launchFormation(const int8_t *formation) {
         enemies[i] = { EnemyType::Boat, enemy_boat };
         break;
 
+      #ifdef BOSS
+
+        case EnemyType::BossGun:
+          enemies[i] = { EnemyType::BossGun, enemy_boss_gun };
+          break;
+
+        case EnemyType::BossPlane:
+          enemies[i] = { EnemyType::BossPlane, enemy_boss_plane };
+          formation_boss = true;
+          break;
+      
+      #endif
+
       default: break;
       
     }
@@ -620,8 +641,38 @@ bool isAimingAtPlayer(const uint8_t enemyIdx) {
   const int8_t playerX = player.getX().getInteger() + PLAYER_WIDTH_HALF;
   const int8_t playerY = player.getY().getInteger() + PLAYER_HEIGHT_HALF;
 
-  const int16_t enemyX = enemies[enemyIdx].getX().getInteger() + (enemies[enemyIdx].getEnemyType() == EnemyType::Boat ? ENEMY_BOAT_TURRENT_CENTER_X : enemies[enemyIdx].getWidth() / 2);
-  const int16_t enemyY = enemies[enemyIdx].getY().getInteger() + (enemies[enemyIdx].getEnemyType() == EnemyType::Boat ? ENEMY_BOAT_TURRENT_CENTER_Y : enemies[enemyIdx].getHeight() / 2);
+  EnemyType enemyType = enemies[enemyIdx].getEnemyType();
+
+  #ifdef BOSS
+    if (enemyType == EnemyType::BossPlane) return false;
+  #endif
+
+  uint8_t xOffset;
+  uint8_t yOffset;
+
+  switch (enemyType) {
+
+    case EnemyType::Boat:
+      xOffset = ENEMY_BOAT_TURRENT_CENTER_X;
+      yOffset = ENEMY_BOAT_TURRENT_CENTER_Y;
+      break;
+
+    #ifdef BOSS
+      case EnemyType::BossGun:
+        xOffset = ENEMY_BOSS_GUN_WIDTH_X / 2;
+        yOffset = ENEMY_BOSS_GUN_WIDTH_Y / 2;
+        break;
+    #endif
+
+    default:
+      xOffset = enemies[enemyIdx].getWidth() / 2;
+      yOffset = enemies[enemyIdx].getHeight() / 2;
+      break;
+
+  }
+
+  const int16_t enemyX = enemies[enemyIdx].getX().getInteger() + xOffset;
+  const int16_t enemyY = enemies[enemyIdx].getY().getInteger() + yOffset;
 
   const int16_t deltaX = playerX - enemyX;
   const int16_t deltaY = playerY - enemyY;
@@ -677,19 +728,41 @@ bool isAimingAtPlayer(const uint8_t enemyIdx) {
 
 
 /* -----------------------------------------------------------------------------------------------------------------------------
- *  Rotate the boat's turret to aim at the player.
+ *  Rotate the boat or Boss gun's turret to aim at the player.
  * -----------------------------------------------------------------------------------------------------------------------------
  */
 Direction aimAtPlayer(const uint8_t enemyIdx) {
 
-  int8_t playerX = player.getX().getInteger() + PLAYER_WIDTH_HALF;
-  int8_t playerY = player.getY().getInteger() + PLAYER_HEIGHT_HALF;
+  const int8_t playerX = player.getX().getInteger() + PLAYER_WIDTH_HALF;
+  const int8_t playerY = player.getY().getInteger() + PLAYER_HEIGHT_HALF;
 
-  int16_t enemyX = enemies[enemyIdx].getX().getInteger() + ENEMY_BOAT_TURRENT_X + 5;
-  int16_t enemyY = enemies[enemyIdx].getY().getInteger() + (enemies[enemyIdx].getHeight() / 2);
+  EnemyType enemyType = enemies[enemyIdx].getEnemyType();
+  uint8_t xOffset = 0;
+  uint8_t yOffset = 0;
+  
+  switch (enemyType) {
 
-  int16_t deltaX = playerX - enemyX;
-  int16_t deltaY = playerY - enemyY;
+    case EnemyType::Boat:
+      xOffset = ENEMY_BOAT_TURRENT_X + 5;
+      yOffset = (enemies[enemyIdx].getHeight() / 2);
+      break;
+
+      #ifdef BOSS
+        case EnemyType::BossGun:
+          xOffset = ENEMY_BOSS_GUN_WIDTH_X;
+          yOffset = ENEMY_BOSS_GUN_WIDTH_Y;
+          break;
+      #endif
+
+    default: break;
+
+  } 
+
+  const int16_t enemyX = enemies[enemyIdx].getX().getInteger() + xOffset;
+  const int16_t enemyY = enemies[enemyIdx].getY().getInteger() + yOffset;
+
+  const int16_t deltaX = playerX - enemyX;
+  const int16_t deltaY = playerY - enemyY;
 
   SQ15x16 heading = (SQ15x16)ROTATE_Q2_MAX;
   if (deltaX != 0) heading = abs((SQ15x16)deltaY / (SQ15x16)deltaX);
@@ -823,20 +896,35 @@ void checkForEnemiesShot() {
       
       for (uint8_t j = 0; j < NUMBER_OF_ENEMIES; ++j) {
   
-        if (enemies[j].getEnabled() && enemies[j].getHealth() > 0) {
-  
-          if (arduboy.collide(bulletPoint, enemies[j].getRect())) {
-  
-            playerBullets[i].setEnabled(false);
-            enemies[j].decHealth((SQ7x8)1.0);
-  
-            if (enemies[j].getHealth().getInteger() == 0) player.setScore(player.getScore() + 1);
-            if (!sound.playing()) sound.tones(hit_by_bullets);
+        EnemyType enemyType = enemies[j].getEnemyType();
 
+        switch (enemyType) {
+
+          #ifdef BOSS
+            case EnemyType::BossPlane:
+              break;
+          #endif
+
+          default:
+
+            if (enemies[j].getEnabled() && enemies[j].getHealth() > 0) {
+      
+              if (arduboy.collide(bulletPoint, enemies[j].getRect())) {
+      
+                playerBullets[i].setEnabled(false);
+                enemies[j].decHealth((SQ7x8)1.0);
+      
+                if (enemies[j].getHealth().getInteger() == 0) player.setScore(player.getScore() + 1);
+                if (!sound.playing()) sound.tones(hit_by_bullets);
+
+                break;
+      
+              }
+      
+            }
+            
             break;
-  
-          }
-  
+
         }
   
       }
@@ -899,7 +987,41 @@ void checkForPlayerEnemyCollision() {
 
     if (enemies[i].getEnabled() && enemies[i].getDelayStart() == 0) {
 
-      if (enemies[i].getEnemyType() != EnemyType::Boat && arduboy.collide(playerRect, enemies[i].getRect())) {
+      EnemyType enemyType = enemies[i].getEnemyType();
+      bool hit = false;
+
+      switch (enemyType) {
+
+        case EnemyType::Boat:         break;
+
+        #ifdef BOSS
+          case EnemyType::BossGun:    break;
+
+          case EnemyType::BossPlane:  
+            
+            if (arduboy.collide(playerRect, enemies[i].getRect())) { //SJH need to create rectangles ..
+
+              hit = true;
+
+            }
+
+            break;
+
+        #endif
+
+        default:
+
+          if (arduboy.collide(playerRect, enemies[i].getRect())) {
+
+            hit = true;
+
+          }
+
+          break;
+
+      }
+
+      if (hit) {
 
         player.decHealth(PLAYER_HIT_PLANE_DECREMENT);
         if (!sound.playing()) sound.tones(hit_by_plane);
@@ -909,7 +1031,7 @@ void checkForPlayerEnemyCollision() {
         ledCountdown = LED_COUNTDOWN;
         #endif
 
-        break;
+        break; // break from loop
 
       }
 
@@ -938,9 +1060,44 @@ void checkCanEnemyShoot() {
 
         enemies[i].decNumberOfBulletsFired();
   
-        enemyBullets[enemyBulletIdx].setX(enemies[i].getX().getInteger() + (enemies[i].getEnemyType() == EnemyType::Boat ? ENEMY_BOAT_TURRENT_X : (enemies[i].getWidth() / 2)));
-        enemyBullets[enemyBulletIdx].setY(enemies[i].getY().getInteger() + (enemies[i].getEnemyType() == EnemyType::Boat ? ENEMY_BOAT_TURRENT_CENTER_Y : (enemies[i].getHeight() / 2)));
-        enemyBullets[enemyBulletIdx].setDirection(enemies[i].getEnemyType() == EnemyType::Boat ? enemies[i].getTurretDirection() : enemies[i].getDirection());
+        int16_t x = enemies[i].getX().getInteger();
+        int16_t y = enemies[i].getY().getInteger();
+        uint8_t xOffset;
+        uint8_t yOffset;
+
+        EnemyType enemyType = enemies[i].getEnemyType();
+        Direction direction = Direction::North;
+
+        switch (enemyType) {
+
+          case EnemyType::Boat:
+            xOffset = ENEMY_BOAT_TURRENT_X;
+            yOffset = ENEMY_BOAT_TURRENT_CENTER_Y;
+            direction = enemies[i].getTurretDirection();
+            break;
+
+          #ifdef BOSS
+            case EnemyType::BossGun:
+              xOffset = ENEMY_BOSS_GUN_WIDTH_X / 2;
+              yOffset = ENEMY_BOSS_GUN_WIDTH_Y / 2;
+              direction = enemies[i].getDirection();
+              break;
+
+            case EnemyType::BossPlane:
+              break;
+          #endif
+
+          default:
+            xOffset = enemies[i].getWidth() / 2;
+            yOffset = enemies[i].getHeight() / 2;
+            direction = enemies[i].getDirection();
+            break;
+
+        }
+
+        enemyBullets[enemyBulletIdx].setX(x + xOffset);
+        enemyBullets[enemyBulletIdx].setY(y + yOffset);
+        enemyBullets[enemyBulletIdx].setDirection(direction);
         enemyBullets[enemyBulletIdx].setEnabled(true);
         enemyBullets[enemyBulletIdx].setEnemyType(enemies[i].getEnemyType());
         
