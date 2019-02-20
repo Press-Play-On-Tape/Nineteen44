@@ -280,15 +280,24 @@ void gameLoop() {
     
     // Handle player movement ..
     
-    if ((pressed & UP_BUTTON) && player.getY() > PLAYER_MOVEMENT_INC_UP)                                     { player.setY(player.getY() - PLAYER_MOVEMENT_INC_UP); }
-    if ((pressed & DOWN_BUTTON) && player.getY() < HEIGHT - PLAYER_HEIGHT)                                   { player.setY(player.getY() + PLAYER_MOVEMENT_INC_DOWN); }
+    if ((pressed & UP_BUTTON) && player.getY() > PLAYER_MOVEMENT_INC_UP)                                      { player.setY(player.getY() - PLAYER_MOVEMENT_INC_UP); }
+    if ((pressed & DOWN_BUTTON) && player.getY() < HEIGHT - PLAYER_HEIGHT)                                    { player.setY(player.getY() + PLAYER_MOVEMENT_INC_DOWN); }
 
     #ifdef BOSS
-    if ((pressed & LEFT_BUTTON) && player.getX() > PLAYER_MOVEMENT_INC_LEFT)                                 { player.setX(player.getX() - PLAYER_MOVEMENT_INC_LEFT); }
-    if ((pressed & RIGHT_BUTTON) && player.getX() < WIDTH - PLAYER_WIDTH - SCOREBOARD_OUTER_RECT_WIDTH)      { player.setX(player.getX() + PLAYER_MOVEMENT_INC_RIGHT); }
+
+      if (!formation_boss) {
+        if ((pressed & LEFT_BUTTON) && player.getX() > PLAYER_MOVEMENT_INC_LEFT)                              { player.setX(player.getX() - PLAYER_MOVEMENT_INC_LEFT); }
+        if ((pressed & RIGHT_BUTTON) && player.getX() < WIDTH - PLAYER_WIDTH - SCOREBOARD_OUTER_RECT_WIDTH)   { player.setX(player.getX() + PLAYER_MOVEMENT_INC_RIGHT); }
+      }
+
+    #else
+
+      if ((pressed & LEFT_BUTTON) && player.getX() > PLAYER_MOVEMENT_INC_LEFT)                                { player.setX(player.getX() - PLAYER_MOVEMENT_INC_LEFT); }
+      if ((pressed & RIGHT_BUTTON) && player.getX() < WIDTH - PLAYER_WIDTH - SCOREBOARD_OUTER_RECT_WIDTH)     { player.setX(player.getX() + PLAYER_MOVEMENT_INC_RIGHT); }
+
     #endif 
 
-    if (justPressed & B_BUTTON)                                                                              { player.startRoll(); }
+    if (justPressed & B_BUTTON)                                                                               { player.startRoll(); }
                                                                                                                     
     if (justPressed & A_BUTTON) {
 

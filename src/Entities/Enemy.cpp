@@ -306,7 +306,26 @@ void Enemy::move() {
         }
         else {
 
-          _enabled = false;
+          // Bosses move to a location then stop (but are not disabled).
+
+          #ifdef BOSS
+
+            switch (this._enemyType) {
+
+              case EnemyType::BossGun:    
+              case EnemyType::BossPlane:  
+                _currentPos = _currentPos - 3; // Will force a repeat forever by making it read END_SEQUENCE_UINT again and again. SJH 
+                break;
+
+              default:
+                _enabled = false;
+                break;
+              
+            }
+
+          #else
+            _enabled = false;
+          #endif
         
         }
       
