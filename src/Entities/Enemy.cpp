@@ -173,6 +173,9 @@ void Enemy::decNumberOfBulletsFired() {
 
 }
 
+//                                 UL       UR1      UR2       MID1     MID2      BL       BL2,      BL1
+const uint8_t boss_positions[] = { 4, 47,   54, 0,   65, 40,   0, 68,   32, 68,   4, 86,   32, 86,   32, 96 };
+
 void Enemy::renderImage() {
 
   int16_t x = _x.getInteger();
@@ -180,7 +183,34 @@ void Enemy::renderImage() {
 
   if (_enabled && _delayStart == 0 && x + this->getWidth() >= 0 && x < WIDTH) {
 
-    Sprites::drawExternalMask(x, y, pgm_read_word_near(&_bitmaps[static_cast<uint8_t>(_direction)]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + static_cast<uint8_t>(_direction)]), 0, 0);
+    #ifdef BOSS
+
+Serial.print(x);
+Serial.print(",");
+Serial.println(y);
+
+      if (_type == EnemyType::BossPlane) {
+
+        for (uint8_t z = 0; z < 8; z++) {
+
+          uint8_t xOffset = boss_positions[z * 2];
+          uint8_t yOffset = boss_positions[(z * 2 + 1)];
+
+          Sprites::drawExternalMask(x + xOffset, y + yOffset, pgm_read_word_near(&_bitmaps[z]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + z]), 0, 0);
+
+        }
+
+          Sprites::drawExternalMask(x, y, pgm_read_word_near(&_bitmaps[0]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + 0]), 0, 0);
+      }
+      else {
+
+        Sprites::drawExternalMask(x, y, pgm_read_word_near(&_bitmaps[static_cast<uint8_t>(_direction)]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + static_cast<uint8_t>(_direction)]), 0, 0);
+
+      }
+
+    #else
+      Sprites::drawExternalMask(x, y, pgm_read_word_near(&_bitmaps[static_cast<uint8_t>(_direction)]), pgm_read_word_near(&_bitmaps[IMAGES_MASK_OFFSET + static_cast<uint8_t>(_direction)]), 0, 0);
+    #endif
     
     if (_type == EnemyType::Boat && _turretDirection != Direction::West) {
 
@@ -310,7 +340,7 @@ void Enemy::move() {
 
           #ifdef BOSS
 
-            switch (this._enemyType) {
+            switch (_type) {
 
               case EnemyType::BossGun:    
               case EnemyType::BossPlane:  

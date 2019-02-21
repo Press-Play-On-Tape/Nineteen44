@@ -28,7 +28,9 @@
 Arduboy2Ext arduboy;
 ArduboyTones sound(arduboy.audio.enabled);
 
+#ifndef DEBUG
 ARDUBOY_NO_USB
+#endif
 
 #ifdef HIGH_SCORES
 #include "src/Fonts/Fonts.h"
@@ -39,10 +41,17 @@ uint8_t alternate = 0;
 #endif
 
 const uint8_t* const missions[] =        { mission_00, mission_01, mission_02, mission_03, mission_04 };
+
+#ifdef BOSS
+const int8_t* const formations[] =       { formation_00, formation_01, formation_02, formation_03, formation_04, formation_05, formation_06, 
+                                           formation_07, formation_08, formation_09, formation_10, formation_11, formation_12, formation_13, 
+                                           formation_14 };
+const int8_t* const sequences[] =        { seq_00, seq_01, seq_02, seq_03, seq_04 };
+#else
 const int8_t* const formations[] =       { formation_00, formation_01, formation_02, formation_03, formation_04, formation_06, formation_05, 
-                                           formation_06, formation_07, formation_08, formation_09, formation_10, formation_11, formation_12, 
-                                           formation_13 };
+                                           formation_07, formation_08, formation_09, formation_10, formation_11, formation_12, formation_13 };
 const int8_t* const sequences[] =        { seq_00, seq_01, seq_02, seq_03 };
+#endif
 
 const int8_t obstacleLaunchDelayInc[] =  { OBSTACLE_LAUNCH_DELAY_INC_L0, OBSTACLE_LAUNCH_DELAY_INC_L1, OBSTACLE_LAUNCH_DELAY_INC_L2 };
 const int8_t frameRateInc[] =            { FRAME_RATE_INC_L0, FRAME_RATE_INC_L1, FRAME_RATE_INC_L2 };

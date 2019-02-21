@@ -18,6 +18,32 @@
 #define SCENERY_BOAT                0b00010000
 
 const uint8_t PROGMEM mission_00[] = { 
+  1,
+  SCENERY_NONE | 14, 
+  };
+
+const uint8_t PROGMEM mission_01[] = { 
+  1,
+  SCENERY_NONE | 14, 
+  };
+
+const uint8_t PROGMEM mission_02[] = { 
+  1,
+  SCENERY_NONE | 14, 
+  };
+
+const uint8_t PROGMEM mission_03[] = { 
+  1,
+  SCENERY_NONE | 14, 
+  };
+
+const uint8_t PROGMEM mission_04[] = { 
+  1,
+  SCENERY_NONE | 14, 
+  };
+
+/*
+const uint8_t PROGMEM mission_00[] = { 
   14,
   SCENERY_NONE | 0, 
   SCENERY_NONE | 1, 
@@ -37,9 +63,8 @@ const uint8_t PROGMEM mission_00[] = {
 
 const uint8_t PROGMEM mission_01[] = { 
   14,
-  SCENERY_NONE | 14, 
   SCENERY_NONE | 7, 
-  SCENERY_NONE | 8, 
+  SCENERY_NONE | 8,
   SCENERY_NONE | 9, 
   SCENERY_NONE | 13, 
   SCENERY_NONE | 0, 
@@ -103,7 +128,7 @@ const uint8_t PROGMEM mission_04[] = {
   SCENERY_BOAT | 11, 
   SCENERY_BOAT | 5,    // Boat
   SCENERY_NONE | 6,};
-
+*/
 
 /* -----------------------------------------------------------------------------------------------------------------------------
  *  Formations
@@ -120,7 +145,7 @@ const uint8_t PROGMEM mission_04[] = {
 
 
 const int8_t PROGMEM formation_00[] = {
-  2, 
+  4, 
   (uint8_t)EnemyType::Fighter1, 0, 0, 5, 0, false, false, 1,
   (uint8_t)EnemyType::Fighter1, 0, 0, 0, 24, false, false, 1,
   (uint8_t)EnemyType::Fighter1, 0, 0, -5, 80, false, false, 1,
@@ -244,6 +269,13 @@ const int8_t PROGMEM formation_13[] = {
   (uint8_t)EnemyType::Fighter1, 2, -16, 32, 90, false, true, 1,
 };
 
+#ifdef BOSS
+const int8_t PROGMEM formation_14[] = {
+  1, 
+  (uint8_t)EnemyType::BossPlane, 2, -16, -48, 0, false, false, 255,
+};
+#endif
+
 /* -----------------------------------------------------------------------------------------------------------------------------
  *  Sequences
  *
@@ -293,3 +325,10 @@ const int8_t PROGMEM seq_03[] = {         /* Straight Down */
   0, 0, END_SEQUENCE,
 };
 
+#ifdef BOSS
+  const int8_t PROGMEM seq_04[] = {         /* BOSS */ 
+    127, 0, (int8_t)Direction::West,
+    -1, 0, 64,
+    0, 0, END_SEQUENCE,
+  };
+#endif
