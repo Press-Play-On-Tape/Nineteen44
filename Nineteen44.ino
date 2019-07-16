@@ -30,8 +30,8 @@ ArduboyTones sound(arduboy.audio.enabled);
 
 ARDUBOY_NO_USB
 
-#ifdef HIGH_SCORES
 #include "src/Fonts/Fonts.h"
+#ifdef HIGH_SCORES
 #include "src/Utils/HighScoreEditor.h"
 
 HighScore highScore;
@@ -85,6 +85,7 @@ uint8_t formation = 0;
 uint8_t introState;
 uint8_t intro;
 uint16_t frameRate = INIT_FRAME_RATE;
+uint8_t restart = 0;
 
 uint16_t obstacleLaunchDelayMin = OBSTACLE_LAUNCH_DELAY_MIN;
 uint16_t obstacleLaunchDelayMax = OBSTACLE_LAUNCH_DELAY_MAX;

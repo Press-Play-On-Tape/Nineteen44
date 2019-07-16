@@ -10,6 +10,7 @@ void introInit() {
   mission = 0;                            
   missionIdx = 0;
   introState = 0;
+  restart = 0;
   gameState = GameState::Intro_Loop;
   sound.tones(score);
   player.initGame();
@@ -116,8 +117,8 @@ void introLoop() {
 
       case IntroState::Level1 ... IntroState::Level3:
         {
-          uint8_t upX = 36;
-          uint8_t downX = 48;
+          uint8_t leftX = 77;
+          uint8_t rightX = 115;
 
           switch (arrowState) {
 
@@ -125,17 +126,19 @@ void introLoop() {
               break;
 
             case ArrowState::Lower:
-              downX = downX + 2;
+              leftX = leftX - 2;
               break;
 
             case ArrowState::Upper:
-              upX = upX - 2;
+              rightX = rightX + 2;
               break;
 
           }
 
-          Sprites::drawSelfMasked(94, downX, arrow_down, 0);
-          Sprites::drawSelfMasked(94, upX, arrow_up, 0);
+          //Sprites::drawSelfMasked(94, downX, arrow_down, 0);
+          //Sprites::drawSelfMasked(94, upX, arrow_up, 0);
+          Sprites::drawSelfMasked(leftX, 40, arrow_left, 0);
+          Sprites::drawSelfMasked(rightX, 40, arrow_right, 0);
         
           Sprites::drawOverwrite(85, 39, level_select, 0);
           Sprites::drawOverwrite(106, 40, font4x6_Full, 27 + level);
@@ -160,10 +163,11 @@ void introLoop() {
 
   {
    
+    uint8_t pressed = arduboy.pressedButtons();
     uint8_t justPressed = arduboy.justPressedButtons();
     IntroState state = static_cast<IntroState>((introState & 0b11100000) >> 5);
  
-    if (justPressed & UP_BUTTON) {
+    if (justPressed & RIGHT_BUTTON) {
       
       switch (state) {
 
@@ -189,7 +193,7 @@ void introLoop() {
 
     }
 
-    if (justPressed & DOWN_BUTTON) {
+    if (justPressed & LEFT_BUTTON) {
 
       switch (state) {
 
@@ -230,6 +234,23 @@ void introLoop() {
       mission = 0; 
       
     }  
+
+
+    // Restart ?
+
+    if (pressed & DOWN_BUTTON) {
+
+      if (restart < UPLOAD_DELAY) {
+        restart++;
+      }
+      else {
+        arduboy.exitToBootloader();
+      }
+
+    }
+    else {
+      restart = 0;
+    }
 
   }
 

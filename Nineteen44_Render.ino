@@ -35,11 +35,6 @@ void moveAndRenderEnemyBullets() {
       uint8_t y = enemyBullets[i].getY() - 1;
 
       Sprites::drawPlusMask(x, y, bullet_img, static_cast<uint8_t>(enemyBullets[i].getBulletImage()));
-uint8_t tt = static_cast<uint8_t>(enemyBullets[i].getBulletImage());
-tt = 16 + (tt * 16);
-
-
-arduboy.drawFastVLine(2,0,tt);   
 
     }
     

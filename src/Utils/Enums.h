@@ -1,7 +1,7 @@
 #pragma once
 
 // Remove comment // to free up some PROGMEM for DEBUG
-#define DEBUG
+#define _DEBUG
 
 #include "FixedPoints.h"
 #include "FixedPointsCommon.h"
@@ -57,7 +57,7 @@ enum class GameState : uint8_t {
   #endif
 };
 
-
+constexpr const static uint8_t UPLOAD_DELAY = 16;
 #define MAX_BULLET_COUNTDOWN 20
 
 #ifdef USE_LEDS             
@@ -65,8 +65,8 @@ enum class GameState : uint8_t {
 #endif
 
 
-#define _PLAYER_US
-#define PLAYER_JAPANESE
+#define PLAYER_US
+#define _PLAYER_JAPANESE
 
 
 

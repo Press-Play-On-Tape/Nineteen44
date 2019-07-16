@@ -104,6 +104,7 @@ void endOfSequence(const uint8_t level) {
   // Handle key presses ..
   {
     uint8_t justPressed = arduboy.justPressedButtons();
+    uint8_t pressed = arduboy.pressedButtons();
 
     if (gameState == GameState::End_Of_Mission) {
       if (justPressed & A_BUTTON) { gameState = GameState::Game_Init; }

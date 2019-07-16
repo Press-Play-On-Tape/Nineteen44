@@ -115,6 +115,17 @@ const uint8_t PROGMEM arrow_down[] = {
 0x01, 0x03, 0x07, 0x03, 0x01, 
 };
 
+const uint8_t PROGMEM arrow_left[] = {
+3, 8,
+0x08, 0x1c, 0x3e, 
+};
+
+const uint8_t PROGMEM arrow_right[] = {
+3, 8,
+0x3e, 0x1c, 0x08, 
+};
+
+
 #ifndef DEBUG
 const uint8_t PROGMEM splash_upper[] = {
 128, 16,
