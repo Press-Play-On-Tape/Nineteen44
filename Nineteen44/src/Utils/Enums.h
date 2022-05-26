@@ -37,8 +37,27 @@
 #define HIGH_SCORES
 
 
-const int8_t PROGMEM movement_x_offset[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+constexpr int8_t PROGMEM movement_x_offset[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 const int8_t PROGMEM movement_y_offset[] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+
+
+// EEPROM settings for high score ..
+namespace Constants {
+
+  constexpr int8_t  EEPROM_Entry_Size = 5;
+  constexpr int16_t EEPROM_Start = 200;
+  constexpr int16_t EEPROM_Start_C1 = 201;
+  constexpr int16_t EEPROM_Start_C2 = 202;
+  constexpr int16_t EEPROM_Score = 202;
+  constexpr int16_t EEPROM_Score_1 = 202;
+  constexpr int16_t EEPROM_Score_2 = 204;
+  constexpr int16_t EEPROM_Score_3 = 206;
+  constexpr int16_t EEPROM_Level = 208;
+  constexpr int16_t EEPROM_Top_Start = 209;
+  constexpr int16_t EEPROM_End = EEPROM_Top_Start + (EEPROM_Entry_Size * 5);
+  constexpr int16_t EEPROM_Checksum = EEPROM_End;
+
+};
 
 // Game States ..
 

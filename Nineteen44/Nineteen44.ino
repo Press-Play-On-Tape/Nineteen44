@@ -134,7 +134,7 @@ void setup() {
   obstacleFuelValue = FUEL_MAX;
 
   frameRate = INIT_FRAME_RATE;
-  level = eeprom_read_byte(EEPROM_LEVEL);
+  level = EEPROM.read(Constants::EEPROM_Level);
   
   arduboy.setFrameRate(frameRate);
   arduboy.initRandomSeed();

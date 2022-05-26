@@ -47,14 +47,15 @@ void endOfSequence(const uint8_t level) {
   if (level == 1 && mission == 60) { gameState = GameState::End_Of_Game; endOfLevel = true; }
 
   #ifndef HIGH_SCORES
-    uint16_t high = eeprom_read_word((uint16_t *)(EEPROM_SCORE + (level * 2)));
+    uint16_t high = EEPROM.read(EEPROM_SCORE + (level * 2));
   #else
     uint16_t high = EEPROM_Utils::getHighScore();
   #endif
 
   if (player.getScore() > high) { 
     #ifndef HIGH_SCORES
-    eeprom_update_word((uint16_t *)(EEPROM_SCORE + (level * 2)), player.getScore());
+    EEPROM.put(Constants::EEPROM_Score + (level * 2)), player.getScore());
+    EEPROM_Utils::checkSum(true);
     #endif
     high = player.getScore();
   }

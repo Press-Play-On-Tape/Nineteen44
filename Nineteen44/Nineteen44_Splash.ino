@@ -178,13 +178,15 @@ void introLoop() {
         case IntroState::Level1:
           introState = (static_cast<uint8_t>(IntroState::Level2) << 5) | (static_cast<uint8_t>(ArrowState::Upper) << 3) | SPLASH_ARROW_MAX;
           level++;
-          eeprom_update_byte(EEPROM_LEVEL, level);
+          EEPROM.put(Constants::EEPROM_Level, level);
+          EEPROM_Utils::checkSum(true);
           break;
 
         case IntroState::Level2:
           introState = (static_cast<uint8_t>(IntroState::Level3) << 5) | (static_cast<uint8_t>(ArrowState::Upper) << 3) | SPLASH_ARROW_MAX;
           level++;
-          eeprom_update_byte(EEPROM_LEVEL, level);
+          EEPROM.put(Constants::EEPROM_Level, level);
+          EEPROM_Utils::checkSum(true);
           break;
 
         default: break;
@@ -204,13 +206,15 @@ void introLoop() {
         case IntroState::Level2:
           introState = (static_cast<uint8_t>(IntroState::Level1) << 5) | (static_cast<uint8_t>(ArrowState::Lower) << 3) | SPLASH_ARROW_MAX;
           level--;
-          eeprom_update_byte(EEPROM_LEVEL, level);
+          EEPROM.put(Constants::EEPROM_Level, level);
+          EEPROM_Utils::checkSum(true);
           break;
 
         case IntroState::Level3:
           introState = (static_cast<uint8_t>(IntroState::Level2) << 5) | (static_cast<uint8_t>(ArrowState::Lower) << 3) | SPLASH_ARROW_MAX;
           level--;
-          eeprom_update_byte(EEPROM_LEVEL, level);
+          EEPROM.put(Constants::EEPROM_Level, level);
+          EEPROM_Utils::checkSum(true);
           break;
 
         default: break;
@@ -238,19 +242,19 @@ void introLoop() {
 
     // Restart ?
 
-    if (pressed & DOWN_BUTTON) {
+    // if (pressed & DOWN_BUTTON) {
 
-      if (restart < UPLOAD_DELAY) {
-        restart++;
-      }
-      else {
-        arduboy.exitToBootloader();
-      }
+    //   if (restart < UPLOAD_DELAY) {
+    //     restart++;
+    //   }
+    //   else {
+    //     arduboy.exitToBootloader();
+    //   }
 
-    }
-    else {
-      restart = 0;
-    }
+    // }
+    // else {
+    //   restart = 0;
+    // }
 
   }
 

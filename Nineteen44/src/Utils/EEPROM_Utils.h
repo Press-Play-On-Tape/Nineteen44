@@ -4,18 +4,6 @@
 #include "../Entities/Slot.h"
 #include "HighScoreEditor.h"
 
-// EEPROM settings for high score ..
-
-#define EEPROM_START                    ((uint8_t *)200)
-#define EEPROM_START_C1                 ((uint8_t *)200)
-#define EEPROM_START_C2                 ((uint8_t *)201)
-#define EEPROM_SCORE                    202
-#define EEPROM_SCORE_1                  ((uint16_t *)202)
-#define EEPROM_SCORE_2                  ((uint16_t *)204)
-#define EEPROM_SCORE_3                  ((uint16_t *)206)
-#define EEPROM_LEVEL                    ((uint8_t *)208)
-#define EEPROM_TOP_START                209
-#define EEPROM_ENTRY_SIZE               5
 
 class EEPROM_Utils {
 
@@ -30,6 +18,7 @@ class EEPROM_Utils {
     #ifdef HIGH_SCORES
     static uint16_t getHighScore();
     #endif
+    static int16_t checkSum(bool update);
 
 };
 
@@ -43,22 +32,22 @@ class EEPROM_Utils {
  */
 void EEPROM_Utils::initEEPROM(bool forceClear) {
 
-  uint8_t c1 = eeprom_read_byte(EEPROM_START_C1);
-  uint8_t c2 = eeprom_read_byte(EEPROM_START_C2);
+  byte c1 = EEPROM.read(Constants::EEPROM_Start_C1);
+  byte c2 = EEPROM.read(Constants::EEPROM_Start_C2);;
 
   if (forceClear || c1 != '4' || c2 != '3') { 
 
-    eeprom_update_byte(EEPROM_START_C1, '4');
-    eeprom_update_byte(EEPROM_START_C2, '3');
-    eeprom_update_byte(EEPROM_LEVEL, 0);
+    EEPROM.put(Constants::EEPROM_Start_C1, '4');
+    EEPROM.put(Constants::EEPROM_Start_C2, '3');
+    EEPROM.put(Constants::EEPROM_Level, 0);
 
     #ifndef HIGH_SCORES
 
       uint16_t score = 0;
 
-      eeprom_update_word(EEPROM_SCORE_1, score);
-      eeprom_update_word(EEPROM_SCORE_2, score);
-      eeprom_update_word(EEPROM_SCORE_3, score);
+      EEPROM.put(EEPROM_SCORE_1, score);
+      EEPROM.put(EEPROM_SCORE_2, score);
+      EEPROM.put(EEPROM_SCORE_3, score);
 
     #else
 
@@ -66,17 +55,32 @@ void EEPROM_Utils::initEEPROM(bool forceClear) {
 
       for (uint8_t x = 0; x < MAX_NUMBER_OF_SCORES; x++) {
 
-        eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x)), x); 
-        eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 1), x); 
-        eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 2), x); 
-        eeprom_update_word((uint16_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 3), score);
+        EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x), x); 
+        EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 1, x); 
+        EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 2, x); 
+        EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 3, score);
         score = score - 2;
 
       }
 
+      EEPROM_Utils::checkSum(true);
+
     #endif
 
   }
+  else {
+
+    int16_t checkSumOld = 0;
+    int16_t checkSumNow = EEPROM_Utils::checkSum(false);
+    EEPROM.get(Constants::EEPROM_Checksum, checkSumOld);
+
+    if (checkSumNow != checkSumOld) {
+
+        EEPROM_Utils::initEEPROM(true);
+
+    }
+      
+  }    
 
 }
 
@@ -87,7 +91,8 @@ void EEPROM_Utils::initEEPROM(bool forceClear) {
 #ifdef HIGH_SCORES
 uint16_t EEPROM_Utils::getHighScore() {
 
-  uint16_t score = eeprom_read_word((EEPROM_TOP_START + 3));
+  uint16_t score;
+  EEPROM.get(Constants::EEPROM_Top_Start + 3, score);
   return score;
 
 }
@@ -101,12 +106,12 @@ Slot EEPROM_Utils::getSlot(uint8_t x) {
 
   Slot slot;
 
-  slot.setChar0(eeprom_read_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x))));
-  slot.setChar1(eeprom_read_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 1)));
-  slot.setChar2(eeprom_read_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 2)));
+  slot.setChar0(EEPROM.read(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x)));
+  slot.setChar1(EEPROM.read(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 1));
+  slot.setChar2(EEPROM.read(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 2));
 
   uint16_t score = 0;
-  score = eeprom_read_word((uint16_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 3));
+  EEPROM.get(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 3, score);
   slot.setScore(score);
 
 
@@ -143,17 +148,19 @@ uint8_t EEPROM_Utils::saveScore(uint16_t score) {
 
       Slot slot = getSlot(x - 1);
 
-      eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x)), slot.getChar0());
-      eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 1), slot.getChar1());
-      eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 2), slot.getChar2());
-      eeprom_update_word((uint16_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 3), slot.getScore());
+      EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x), slot.getChar0());
+      EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 1, slot.getChar1());
+      EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 2, slot.getChar2());
+      EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * x) + 3, slot.getScore());
 
     }
 
-    eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * idx)), 0);
-    eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * idx) + 1), 0);
-    eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * idx) + 2), 0);
-    eeprom_update_word((uint16_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * idx) + 3), score);
+    EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * idx), 0);
+    EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * idx) + 1, 0);
+    EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * idx) + 2, 0);
+    EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * idx) + 3, score);
+
+    EEPROM_Utils::checkSum(true);
 
   }
 
@@ -169,10 +176,33 @@ uint8_t EEPROM_Utils::saveScore(uint16_t score) {
 #ifdef HIGH_SCORES
 void EEPROM_Utils::writeChars(uint8_t slotIndex, HighScore &highScore) {
 
-    eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * slotIndex)), highScore.getChar(0));
-    eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * slotIndex) + 1), highScore.getChar(1));
-    eeprom_update_byte((uint8_t *)(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * slotIndex) + 2), highScore.getChar(2));
+    EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * slotIndex), highScore.getChar(0));
+    EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * slotIndex) + 1, highScore.getChar(1));
+    EEPROM.put(Constants::EEPROM_Top_Start + (Constants::EEPROM_Entry_Size * slotIndex) + 2, highScore.getChar(2));
+
+    EEPROM_Utils::checkSum(true);
 
 }
 #endif
 
+
+/* -----------------------------------------------------------------------------
+ *   Generate and optionally save a check sum .. 
+ */
+int16_t EEPROM_Utils::checkSum(bool update) {
+
+    int16_t checksum = 0;
+
+    for (uint8_t i = 0; i < (Constants::EEPROM_End - Constants::EEPROM_Start); i++) {
+
+        checksum = checksum + ((i % 2 == 0 ? 1 : -1) * eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Start + i)));
+
+    }
+
+    if (update) {
+        EEPROM.put(Constants::EEPROM_Checksum, static_cast<uint16_t>(checksum));
+    }
+
+    return checksum;
+
+}

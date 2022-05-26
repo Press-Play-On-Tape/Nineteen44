@@ -1,6 +1,7 @@
 {
     "sketch": "Nineteen44/Nineteen44.ino",
     "port": "/dev/cu.usbmodem1461",
-    "board": "arduino:avr:leonardo",
-    "output": "../build"
+    "board": "arduboy-homemade:avr:8bitcadexlup",
+    "output": "../build",
+    "configuration": "core=arduboy-core,boot=cathy3k,contrast=normal"
 }

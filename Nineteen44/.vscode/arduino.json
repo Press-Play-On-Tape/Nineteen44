@@ -1,0 +1,7 @@
+{
+    "configuration": "core=arduboy-core,boot=cathy3k",
+    "board": "arduboy-homemade:avr:arduboy",
+    "sketch": "Nineteen44.ino",
+    "output": "../../build",
+    "port": "/dev/tty.usbmodem14101"
+}
